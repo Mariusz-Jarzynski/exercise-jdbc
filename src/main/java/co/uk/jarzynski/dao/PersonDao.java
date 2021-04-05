@@ -15,5 +15,6 @@ public interface PersonDao {
     boolean savePerson(Person somebody);
 
     // ----
+    List<Person> findBySurname(String surname);
 
 }

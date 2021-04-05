@@ -22,7 +22,7 @@ public class PersonDaoImpl implements PersonDao {
         String query = "" +
                 "SELECT ID, NAME, SURNAME, AGE    \n " +
                 "FROM PERSONS                       ";
-
+                   
 
         try {
             Statement statement = dbConnection.createStatement();
@@ -132,4 +132,51 @@ public class PersonDaoImpl implements PersonDao {
 
         return persons;
     }
+
+    // -----
+
+    @Override
+    public List<Person> findBySurname(String surname) {
+        List<Person> result = new ArrayList<>();
+
+        // 1. Create string query
+        String query = " "  +
+                "SELECT ID, NAME, SURNAME, AGE  \n " +
+                "FROM PERSONS                   \n " +
+                "WHERE SURNAME = ?;             \n " ;
+
+        // 2. Db connection
+        // dbConnection already exists
+        // 3. Create preparedStatement
+
+        try {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
+
+            // 4. add parameters to statement
+            preparedStatement.setString(1, surname);
+
+            // 5. Send query to db
+            ResultSet cursor = preparedStatement.executeQuery();
+            // 6. Parse result
+            while (cursor.next()) {
+                // 6.1. create Person per record
+                Person person = new Person(
+                        cursor.getInt(1),
+                        cursor.getString(2),
+                        cursor.getNString(3),
+                        cursor.getInt(4)
+                );
+                // 6.2. add to result
+                result.add(person);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+        return result;
+    }
+
+   
 }
