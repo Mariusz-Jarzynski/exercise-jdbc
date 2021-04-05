@@ -1,0 +1,5 @@
+INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Mark', 'P', 30);
+INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Maria', 'W', 18);
+INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Eryk', 'S', 10);
+INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Anna', 'L', 28);
+INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Robert', 'L', 30);
