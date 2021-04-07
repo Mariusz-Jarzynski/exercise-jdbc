@@ -221,8 +221,8 @@ public class PersonDaoImpl implements PersonDao {
 
         try {
             PreparedStatement updateStatement = dbConnection.prepareStatement(updateQuery);
-            updateStatement.setInt(1, personId);
-            updateStatement.setInt(2, newAge);
+            updateStatement.setInt(1, newAge);
+            updateStatement.setInt(2, personId);
 
             numberOfChangedRecords = updateStatement.executeUpdate();
 
@@ -251,6 +251,28 @@ public class PersonDaoImpl implements PersonDao {
         }
 
         return numberOfDeletedPersons;
+    }
+
+    @Override
+    public int getMaxIdForPersons() {
+        String maxIdQuery = " " +
+                "SELECT MAX(ID)     \n " +
+                "FROM PERSONS;      \n ";
+
+        int result = -1;
+
+        try {
+            PreparedStatement maxIdStatement = dbConnection.prepareStatement(maxIdQuery);
+            ResultSet resultCursor = maxIdStatement.executeQuery();
+
+            if (resultCursor.next()) {
+                result = resultCursor.getInt(1);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return result;
     }
 }
 

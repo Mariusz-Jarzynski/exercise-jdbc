@@ -23,4 +23,6 @@ public interface PersonDao {
 
     int deletePersonBySurname(String personSurname);
 
+    int getMaxIdForPersons();
+
 }

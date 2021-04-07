@@ -104,11 +104,16 @@ public class PersonDaoTest {
 
     @Test
     public void updateAgeTest() {
+
         Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();
         PersonDao personDao = new PersonDaoImpl(dbConnnectio);
 
-        int numberOfChangedRecords = personDao.updatePersonAge(36, 36);
-        Assert.assertEquals("Something wrong has happended ", 1, numberOfChangedRecords);
+        final int idOfUpdatedPerson = personDao.getMaxIdForPersons();
+        int numberOfChangedRecords = personDao.updatePersonAge(idOfUpdatedPerson, 36);
+        Assert.assertEquals("Something wrong has happened ", 1, numberOfChangedRecords);
+
+        numberOfChangedRecords = personDao.updatePersonAge(-1, 5);
+        Assert.assertEquals(0, numberOfChangedRecords);
 
     }
 
