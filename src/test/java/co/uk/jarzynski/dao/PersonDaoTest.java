@@ -4,13 +4,43 @@ import co.uk.jarzynski.config.DbConnectionConfig;
 import co.uk.jarzynski.dao.impl.PersonDaoImpl;
 import co.uk.jarzynski.model.Person;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 public class PersonDaoTest {
+
+    @Before
+    public void initData() {
+
+        // remove all data
+        String deleteQuery = "DELETE FROM PERSONS   ";
+
+        // init db
+        String initQuery = " " +
+                "INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Mark', 'P', 30);          \n " +
+                "INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Maria', 'W', 18);         \n " +
+                "INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Eryk', 'S', 10);          \n " +
+                "INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Anna', 'L', 28);          \n " +
+                "INSERT INTO Persons (NAME, SURNAME, AGE) VALUES ('Robert', 'L', 30);        \n ";
+
+        Connection dbConnection = DbConnectionConfig.getInstance().getConnection();
+        try {
+            PreparedStatement deleteStatement = dbConnection.prepareStatement(deleteQuery);
+            deleteStatement.executeUpdate();
+
+            PreparedStatement insertStatement = dbConnection.prepareStatement(initQuery);
+            insertStatement.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
 
     @Test
     public void readAllPersonsFromDbTest() {
