@@ -44,30 +44,22 @@ public class PersonDaoTest {
 
     @Test
     public void readAllPersonsFromDbTest() {
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-            PersonDao personDao = new PersonDaoImpl(connection);
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(connection);
 
-            List<Person> peopleFromDb = personDao.readAllPersons();
-            Assert.assertTrue("Didn't find any people inside db!", peopleFromDb.size() > 0);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<Person> peopleFromDb = personDao.readAllPersons();
+        Assert.assertTrue("Didn't find any people inside db!", peopleFromDb.size() > 0);
+
     }
 
     @Test
     public void readOnlyAdultTest() {
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-            PersonDao personDao = new PersonDaoImpl(connection);
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(connection);
 
-            List<Person> peopleFromDb = personDao.readOnlyAdult();
-            Assert.assertTrue("Didn't find any adult inside db!", peopleFromDb.size() > 0);
+        List<Person> peopleFromDb = personDao.readOnlyAdult();
+        Assert.assertTrue("Didn't find any adult inside db!", peopleFromDb.size() > 0);
 
-            for (Person p : peopleFromDb) {
-                Assert.assertTrue("This is not adult: " + p, p.getAge() >= 18);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -76,62 +68,47 @@ public class PersonDaoTest {
 
         Assert.assertTrue("Constructed object has wrong value of id", Person.ID_OF_NOT_PERSISTENT_PERSON == somebodyToSave.getId());
 
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-            PersonDao personDao = new PersonDaoImpl(connection);
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(connection);
 
-            List<Person> peopleFromDbSoFar = personDao.readAllPersons();
+        List<Person> peopleFromDbSoFar = personDao.readAllPersons();
 
-            personDao.savePerson(somebodyToSave);
-            Assert.assertTrue("Person wasn't save to db", somebodyToSave.getId() != Person.ID_OF_NOT_PERSISTENT_PERSON);
-            // TODO:MP get all persons again and compare if returned list contains new added person
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        personDao.savePerson(somebodyToSave);
+        Assert.assertTrue("Person wasn't save to db", somebodyToSave.getId() != Person.ID_OF_NOT_PERSISTENT_PERSON);
+        // TODO:MP get all persons again and compare if returned list contains new added person
+
     }
 
     // --------
     @Test
     public void checkPersonBySurname() {
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-            PersonDao personDao = new PersonDaoImpl(connection);
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(connection);
 
-            List<Person> persons = personDao.findBySurname("L");
-            System.out.println("Found persons " + persons);
-            Assert.assertEquals("Wrong data found", 2, persons.size());
+        List<Person> persons = personDao.findBySurname("L");
+        System.out.println("Found persons " + persons);
+        Assert.assertEquals("Wrong data found", 2, persons.size());
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     @Test
     public void checkPersonByName() {
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-            PersonDao personDao = new PersonDaoImpl(connection);
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(connection);
 
-            List<Person> persons = personDao.findByName("Anna");
-            System.out.println("Found persons: " + persons);
-            Assert.assertEquals("Wrong data found", 2, persons.size());
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        List<Person> persons = personDao.findByName("Anna");
+        System.out.println("Found persons: " + persons);
+        Assert.assertEquals("Wrong data found", 1, persons.size());
 
     }
 
     @Test
     public void updateAgeTest() {
+        Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(dbConnnectio);
 
-        try (Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();) {
-            PersonDao personDao = new PersonDaoImpl(dbConnnectio);
-
-            int numberOfChangedRecords = personDao.updatePersonAge(36, 36);
-            Assert.assertEquals("Something wrong has happended ", 1, numberOfChangedRecords);
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            Assert.fail("Test failed: " + throwables.getMessage());
-        }
+        int numberOfChangedRecords = personDao.updatePersonAge(36, 36);
+        Assert.assertEquals("Something wrong has happended ", 1, numberOfChangedRecords);
 
     }
 
@@ -140,17 +117,12 @@ public class PersonDaoTest {
 
         final String surnameToDelete = "L";
 
-        try {
-            Connection dbConnection = DbConnectionConfig.getInstance().getConnection();
-            PersonDao personDao = new PersonDaoImpl(dbConnection);
+        Connection dbConnection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(dbConnection);
 
-            int numberOfDeletedRecords = personDao.deletePersonBySurname(surnameToDelete);
-            Assert.assertEquals("Something wrong has happened ", 2, numberOfDeletedRecords);
+        int numberOfDeletedRecords = personDao.deletePersonBySurname(surnameToDelete);
+        Assert.assertEquals("Something wrong has happened ", 2, numberOfDeletedRecords);
 
-
-        } catch (Exception e) {
-            Assert.fail("deletePersonBySurnameTest - failed: " + e.getMessage());
-        }
 
     }
 }
