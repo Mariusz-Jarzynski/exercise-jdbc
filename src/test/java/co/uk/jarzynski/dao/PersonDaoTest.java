@@ -10,8 +10,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class PersonDaoTest {
 
     @Test
@@ -89,6 +87,22 @@ public class PersonDaoTest {
             throwables.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void updateAgeTest() {
+
+        try {
+            Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();
+            PersonDao personDao = new PersonDaoImpl(dbConnnectio);
+
+            int numberOfChangedRecords = personDao.updatePersonAge(36, 36);
+            Assert.assertEquals("Something wrong has happended ", 1, numberOfChangedRecords);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Test failed: " + e.getMessage());
+        }
 
     }
 }

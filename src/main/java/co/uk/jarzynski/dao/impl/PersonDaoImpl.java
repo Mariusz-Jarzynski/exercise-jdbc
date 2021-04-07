@@ -185,11 +185,12 @@ public class PersonDaoImpl implements PersonDao {
         String query = " " +
                 "SELECT ID, NAME, SURNAME, AGE    \n " +
                 "FROM PERSONS                     \n " +
-                "WHERE NAME = ?;                " ;
+                "WHERE NAME = ?;                ";
 
         try {
             PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
             preparedStatement.setString(1, name);
+
             ResultSet cursor = preparedStatement.executeQuery();
 
             while (cursor.next()) {
@@ -199,9 +200,8 @@ public class PersonDaoImpl implements PersonDao {
                         cursor.getString(3),
                         cursor.getInt(4)
                 );
-                  personList.add(person);
+                personList.add(person);
             }
-
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -209,6 +209,30 @@ public class PersonDaoImpl implements PersonDao {
 
         return personList;
     }
+
+    @Override
+    public int updatePersonAge(int personId, int newAge) {
+        int numberOfChangedRecords = 0;
+
+        String updateQuery = " " +
+                "UPDATE PERSONS       \n " +
+                "SET AGE = ?          \n " +
+                "WHERE ID = ?;        \n " ;
+
+        try {
+            PreparedStatement updateStatement = dbConnection.prepareStatement(updateQuery);
+            updateStatement.setInt(1, personId);
+            updateStatement.setInt(2,newAge);
+
+            numberOfChangedRecords = updateStatement.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return numberOfChangedRecords;
+    }
+
 }
 
 
