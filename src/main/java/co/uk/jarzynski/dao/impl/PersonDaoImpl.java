@@ -217,22 +217,41 @@ public class PersonDaoImpl implements PersonDao {
         String updateQuery = " " +
                 "UPDATE PERSONS       \n " +
                 "SET AGE = ?          \n " +
-                "WHERE ID = ?;        \n " ;
+                "WHERE ID = ?;        \n ";
 
         try {
             PreparedStatement updateStatement = dbConnection.prepareStatement(updateQuery);
             updateStatement.setInt(1, personId);
-            updateStatement.setInt(2,newAge);
+            updateStatement.setInt(2, newAge);
 
             numberOfChangedRecords = updateStatement.executeUpdate();
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return numberOfChangedRecords;
     }
 
+    @Override
+    public int deletePersonBySurname(String personSurname) {
+        int numberOfDeletedPersons = 0;
+
+        String deleteQuery = " " +
+                "DELETE FROM PERSONS      \n" +
+                "WHERE SURNAME = ?        \n" ;
+
+        try {
+            PreparedStatement deleteStatement = dbConnection.prepareStatement(deleteQuery);
+            deleteStatement.setString(1, personSurname);
+
+            numberOfDeletedPersons = deleteStatement.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return numberOfDeletedPersons;
+    }
 }
 
 

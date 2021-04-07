@@ -62,21 +62,21 @@ public class PersonDaoTest {
     // --------
     @Test
     public void checkPersonBySurname() {
-      try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
-          PersonDao personDao = new PersonDaoImpl(connection);
+        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
+            PersonDao personDao = new PersonDaoImpl(connection);
 
-          List<Person> persons = personDao.findBySurname("L");
-          System.out.println("Found persons " + persons);
-          Assert.assertEquals("Wrong data found",2, persons.size());
+            List<Person> persons = personDao.findBySurname("L");
+            System.out.println("Found persons " + persons);
+            Assert.assertEquals("Wrong data found", 2, persons.size());
 
-      } catch (SQLException throwables) {
-          throwables.printStackTrace();
-      }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Test
     public void checkPersonByName() {
-        try (Connection connection = DbConnectionConfig.getInstance().getConnection();) {
+        try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
             PersonDao personDao = new PersonDaoImpl(connection);
 
             List<Person> persons = personDao.findByName("Anna");
@@ -92,16 +92,34 @@ public class PersonDaoTest {
     @Test
     public void updateAgeTest() {
 
-        try {
-            Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();
+        try (Connection dbConnnectio = DbConnectionConfig.getInstance().getConnection();) {
             PersonDao personDao = new PersonDaoImpl(dbConnnectio);
 
             int numberOfChangedRecords = personDao.updatePersonAge(36, 36);
             Assert.assertEquals("Something wrong has happended ", 1, numberOfChangedRecords);
 
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            Assert.fail("Test failed: " + throwables.getMessage());
+        }
+
+    }
+
+    @Test
+    public void deletePersonBySurnameTest() {
+
+        final String surnameToDelete = "L";
+
+        try {
+            Connection dbConnection = DbConnectionConfig.getInstance().getConnection();
+            PersonDao personDao = new PersonDaoImpl(dbConnection);
+
+            int numberOfDeletedRecords = personDao.deletePersonBySurname(surnameToDelete);
+            Assert.assertEquals("Something wrong has happened ", 2, numberOfDeletedRecords);
+
+
         } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Test failed: " + e.getMessage());
+            Assert.fail("deletePersonBySurnameTest - failed: " + e.getMessage());
         }
 
     }
