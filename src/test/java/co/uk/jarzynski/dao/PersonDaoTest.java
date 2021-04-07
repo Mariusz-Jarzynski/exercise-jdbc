@@ -63,7 +63,7 @@ public class PersonDaoTest {
 
     // --------
     @Test
-    public void checkPersonByName() {
+    public void checkPersonBySurname() {
       try (Connection connection = DbConnectionConfig.getInstance().getConnection()) {
           PersonDao personDao = new PersonDaoImpl(connection);
 
@@ -76,4 +76,19 @@ public class PersonDaoTest {
       }
     }
 
+    @Test
+    public void checkPersonByName() {
+        try (Connection connection = DbConnectionConfig.getInstance().getConnection();) {
+            PersonDao personDao = new PersonDaoImpl(connection);
+
+            List<Person> persons = personDao.findByName("Anna");
+            System.out.println("Found persons: " + persons);
+            Assert.assertEquals("Wrong data found", 2, persons.size());
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
 }

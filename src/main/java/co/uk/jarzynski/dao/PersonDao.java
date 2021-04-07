@@ -17,4 +17,6 @@ public interface PersonDao {
     // ----
     List<Person> findBySurname(String surname);
 
+    List<Person> findByName(String name);
+
 }

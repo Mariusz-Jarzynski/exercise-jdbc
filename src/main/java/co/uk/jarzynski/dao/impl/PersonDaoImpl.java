@@ -178,5 +178,42 @@ public class PersonDaoImpl implements PersonDao {
         return result;
     }
 
-   
+    @Override
+    public List<Person> findByName(String name) {
+        List<Person> personList = new ArrayList<>();
+
+        String query = " " +
+                "SELECT ID, NAME, SURNAME, AGE    \n " +
+                "FROM PERSONS                     \n " +
+                "WHERE NAME = ?;                " ;
+
+        try {
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            ResultSet cursor = preparedStatement.executeQuery();
+
+            while (cursor.next()) {
+                Person person = new Person(
+                        cursor.getInt(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getInt(4)
+                );
+                  personList.add(person);
+            }
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return personList;
+    }
 }
+
+
+
+
+
+
+
