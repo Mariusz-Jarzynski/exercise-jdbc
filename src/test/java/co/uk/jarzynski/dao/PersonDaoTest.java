@@ -145,4 +145,40 @@ public class PersonDaoTest {
         Assert.assertTrue(beforeSave.getId() != Person.ID_OF_NOT_PERSISTENT_PERSON);
 
     }
+
+    private static void badToy() {
+        if (System.currentTimeMillis() % 2 == 0) {
+            throw new NullPointerException("hahah");
+        }
+    }
+
+    @Test
+    public void handleMyTransaction() {
+        Connection connection = DbConnectionConfig.getInstance().getConnection();
+
+        try {
+            connection.setAutoCommit(false);
+            // remove last record
+            badToy();
+            // add record
+
+            // 1 - ok
+            connection.commit();
+        } catch (Exception e) {
+            // 2 - not ok - rollback
+            try {
+                connection.rollback();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            e.printStackTrace();
+            Assert.fail("Test failed, transaction faild! ");
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
 }
