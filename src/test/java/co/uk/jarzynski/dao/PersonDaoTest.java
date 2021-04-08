@@ -128,6 +128,21 @@ public class PersonDaoTest {
         int numberOfDeletedRecords = personDao.deletePersonBySurname(surnameToDelete);
         Assert.assertEquals("Something wrong has happened ", 2, numberOfDeletedRecords);
 
+    }
+
+    @Test
+    public void savePersonBetterWay() {
+        Person beforeSave = new Person("John", "Doe", 15);
+        System.out.println("Person before saving: " +beforeSave);
+        Assert.assertEquals(Person.ID_OF_NOT_PERSISTENT_PERSON, beforeSave.getId());
+
+        // save person in db
+        Connection dbConnection = DbConnectionConfig.getInstance().getConnection();
+        PersonDao personDao = new PersonDaoImpl(dbConnection);
+        personDao.savePerson2(beforeSave);
+        System.out.println("Person after saving: " + beforeSave);
+
+        Assert.assertTrue(beforeSave.getId() != Person.ID_OF_NOT_PERSISTENT_PERSON);
 
     }
 }

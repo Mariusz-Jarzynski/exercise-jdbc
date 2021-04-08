@@ -274,6 +274,34 @@ public class PersonDaoImpl implements PersonDao {
         }
         return result;
     }
+
+    @Override
+    public boolean savePerson2(Person person) {
+        String insertQuery = " " +
+                "INSERT INTO PERSONS (NAME, SURNAME, AGE)       \n " +
+                "VALUES (?, ?, ? );                             \n ";
+
+        boolean result = false;
+
+        try {
+            PreparedStatement insertStatement = dbConnection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+            insertStatement.setString(1, person.getName());
+            insertStatement.setString(2, person.getSurname());
+            insertStatement.setInt(3, person.getAge());
+
+            result = insertStatement.executeUpdate() > 0;
+
+            ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                person.setId(generatedKeys.getInt(1));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return result;
+    }
 }
 
 

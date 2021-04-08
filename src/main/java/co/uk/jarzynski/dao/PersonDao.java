@@ -25,4 +25,6 @@ public interface PersonDao {
 
     int getMaxIdForPersons();
 
+    boolean savePerson2(Person person);
+
 }
